@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,8 +26,15 @@ namespace Code2.Web.SseTyped
 		public async Task WriteAsync(byte[] data)
 		{
 			if (RequestAborted.IsCancellationRequested) return;
-			await _httpContext.Response.Body.WriteAsync(data, RequestAborted);
-			await _httpContext.Response.Body.FlushAsync(RequestAborted);
+			try
+			{
+				await _httpContext.Response.Body.WriteAsync(data, RequestAborted);
+				await _httpContext.Response.Body.FlushAsync(RequestAborted);
+			}
+			catch (OperationCanceledException)
+			{
+				return;
+			}
 		}
 
 		public void Close()

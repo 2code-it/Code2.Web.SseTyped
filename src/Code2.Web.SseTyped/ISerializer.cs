@@ -2,6 +2,6 @@
 {
 	public interface ISerializer
 	{
-		byte[] SerializeToUtf8Bytes<T>(T obj);
+		string Serialize<T>(T obj);
 	}
 }

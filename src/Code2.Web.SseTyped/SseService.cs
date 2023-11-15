@@ -17,28 +17,24 @@ namespace Code2.Web.SseTyped
 		private readonly ISseConnectionManager _sseConnectionManager;
 		private readonly ISerializer _serializer;
 
-		private readonly static byte[] _messagePrefixBytes = Encoding.UTF8.GetBytes("data: ");
-		private readonly static byte[] _messageSuffixBytes = Encoding.UTF8.GetBytes("\n\n");
+		private const string _dataField = "data: ";
+		private const char _newLine = '\n';
 
 		public async Task Send<T>(T message, string? clientId = null) where T : class
 		{
 			string typeName = typeof(T).Name;
+			StringBuilder sb = new StringBuilder();
+
 			ISseConnection[] connections = _sseConnectionManager.Get(typeName, clientId);
 			if (connections.Length == 0) return;
 
-			byte[] messageBytes = ArrayConcat(_messagePrefixBytes, _serializer.SerializeToUtf8Bytes(message), _messageSuffixBytes);
+			sb.Append(_dataField).Append(_serializer.Serialize(message));
+			sb.Append(_newLine).Append(_newLine);
+
+			byte[] messageBytes = Encoding.UTF8.GetBytes(sb.ToString());
 			var tasks = connections.AsParallel().Select(async x => await x.WriteAsync(messageBytes)).ToArray();
 			await Task.WhenAll(tasks);
 		}
 
-		private byte[] ArrayConcat(byte[] data1, byte[] data2, byte[] data3)
-		{
-			byte[] result = new byte[data1.Length + data2.Length + data3.Length];
-
-			Array.Copy(data1, result, data1.Length);
-			Array.Copy(data2, 0, result, data1.Length, data2.Length);
-			Array.Copy(data3, 0, result, data1.Length + data2.Length, data3.Length);
-			return result;
-		}
 	}
 }

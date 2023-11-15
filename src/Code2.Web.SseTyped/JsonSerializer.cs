@@ -6,9 +6,9 @@ namespace Code2.Web.SseTyped
 	{
 		private readonly JsonSerializerOptions jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 
-		public byte[] SerializeToUtf8Bytes<T>(T obj)
+		public string Serialize<T>(T obj)
 		{
-			return System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(obj, jsonOptions);
+			return System.Text.Json.JsonSerializer.Serialize(obj, jsonOptions);
 		}
 	}
 }
