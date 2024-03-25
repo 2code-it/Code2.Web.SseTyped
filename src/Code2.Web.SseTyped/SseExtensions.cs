@@ -17,7 +17,7 @@ namespace Code2.Web.SseTyped
 			app.UseSseTyped(SseMiddleware.GetDefaultOptions());
 		}
 
-		public static void UseSseTyped(this IApplicationBuilder app, Action<SseMiddlewareOptions> action) 
+		public static void UseSseTyped(this IApplicationBuilder app, Action<SseMiddlewareOptions> action)
 		{
 			SseMiddlewareOptions options = SseMiddleware.GetDefaultOptions();
 			action(options);
@@ -27,9 +27,9 @@ namespace Code2.Web.SseTyped
 		public static void UseSseTyped(this IApplicationBuilder app, string[]? allowedTypeNames = null, string? clientIdKey = null, string? rootPath = null)
 		{
 			SseMiddlewareOptions options = SseMiddleware.GetDefaultOptions();
-			if(!(allowedTypeNames is null)) options.AllowedTypeNames = allowedTypeNames;
-			if(!(clientIdKey is null)) options.ClientIdKey = clientIdKey;
-			if(!(rootPath is null)) options.RootPath = rootPath;
+			if (!(allowedTypeNames is null)) options.AllowedTypeNames = allowedTypeNames;
+			if (!(clientIdKey is null)) options.ClientIdKey = clientIdKey;
+			if (!(rootPath is null)) options.RootPath = rootPath;
 			app.UseSseTyped(options);
 		}
 

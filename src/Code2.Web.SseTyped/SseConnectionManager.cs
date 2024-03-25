@@ -7,7 +7,7 @@ namespace Code2.Web.SseTyped
 	public class SseConnectionManager : ISseConnectionManager
 	{
 		public SseConnectionManager() { }
-		
+
 
 		private IDictionary<string, List<ISseConnection>> _connectionListsByTypeName = new Dictionary<string, List<ISseConnection>>();
 		private static readonly object _lock = new object();
@@ -22,7 +22,7 @@ namespace Code2.Web.SseTyped
 			}
 		}
 
-		public ISseConnection[] Get(string? typeName, string? clientId)
+		public ISseConnection[] Get(string? typeName, IDictionary<string, string>? filter)
 		{
 			lock (_lock)
 			{
@@ -35,13 +35,18 @@ namespace Code2.Web.SseTyped
 
 				if (connections is null) return Array.Empty<ISseConnection>();
 
-				if (!(clientId is null)) connections = connections.Where(x => x.ClientId == clientId);
+				if (!(filter is null))
+				{
+					connections = connections.Where(x =>
+						filter.Any(f => x.Properties.ContainsKey(f.Key) && x.Properties[f.Key].Equals(f.Value, StringComparison.InvariantCultureIgnoreCase))
+					);
+				}
 				return connections.ToArray();
 			}
 		}
 
-		public void Remove(ISseConnection connection, string typeName) 
-		{ 
+		public void Remove(ISseConnection connection, string typeName)
+		{
 			lock (_lock)
 			{
 				if (!_connectionListsByTypeName.ContainsKey(typeName)) throw new ArgumentException($"Collection not found for type {typeName}", nameof(typeName));

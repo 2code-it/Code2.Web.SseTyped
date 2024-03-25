@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-
-namespace Code2.Web.SseTyped
+﻿namespace Code2.Web.SseTyped
 {
 	public class SseMiddlewareOptions
 	{

@@ -1,18 +1,17 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+﻿using Code2.Web.SseTyped.Internals;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using Code2.Web.SseTyped.Internals;
 using System.Threading.Tasks;
 
 namespace Code2.Web.SseTyped
 {
 	public class SseMiddleware
 	{
-		public SseMiddleware(RequestDelegate next, IOptions<SseMiddlewareOptions> options) 
+		public SseMiddleware(RequestDelegate next, IOptions<SseMiddlewareOptions> options)
 			: this(next, options.Value) { }
 
 		public SseMiddleware(RequestDelegate next, SseMiddlewareOptions options)
-			: this (next, options, new SseHttpUtility()) {}
+			: this(next, options, new SseHttpUtility()) { }
 
 		internal SseMiddleware(RequestDelegate next, SseMiddlewareOptions options, ISseHttpUtility sseHttpUtility)
 		{
@@ -20,7 +19,7 @@ namespace Code2.Web.SseTyped
 			_options = options;
 			_sseHttpUtility = sseHttpUtility;
 		}
-		
+
 
 		private readonly RequestDelegate _next;
 		private SseMiddlewareOptions _options;
@@ -46,10 +45,10 @@ namespace Code2.Web.SseTyped
 				await RespondBadRequest(context.Response, validationResult);
 				return;
 			}
-			
+
 			SetSseResponse(context);
 
-			var connection = _sseHttpUtility.CreateConnection(context, _options.ClientIdKey);
+			var connection = _sseHttpUtility.CreateConnection(context);
 			connectionManager.Add(connection, typeName!);
 			await connection.CompletedAsync;
 		}

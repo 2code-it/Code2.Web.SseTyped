@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Code2.Web.SseTyped
 {
 	public interface ISseConnection
 	{
-		string? ClientId { get; }
+		IDictionary<string, string> Properties { get; }
 		Task CompletedAsync { get; }
 		CancellationToken RequestAborted { get; }
 

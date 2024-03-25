@@ -5,6 +5,7 @@
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>true</IsPackable>
+		<LangVersion>11.0</LangVersion>
 
 		<Title>$(AssemblyName)</Title>
 		<Authors>2code</Authors>
