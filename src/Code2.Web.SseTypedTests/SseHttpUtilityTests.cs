@@ -1,15 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Code2.Web.SseTyped;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
+﻿using Code2.Web.SseTyped;
 using Code2.Web.SseTyped.Internals;
 using Microsoft.AspNetCore.Http;
-using NSubstitute.Core;
 using Microsoft.Extensions.Primitives;
+using NSubstitute;
 
 namespace Code2.Web.SseTypedTests
 {
@@ -73,7 +66,7 @@ namespace Code2.Web.SseTypedTests
 			httpRequest.Path.Returns(new PathString("/sse"));
 			SseMiddlewareOptions options = new SseMiddlewareOptions();
 			options.RootPath = "/sse";
-			options.AllowedTypeNames = new [] { "Type2", "Type3" };
+			options.AllowedTypeNames = new[] { "Type2", "Type3" };
 			string? typeName = "Type1";
 			SseHttpUtility sseHttpUtility = new SseHttpUtility();
 
@@ -106,7 +99,7 @@ namespace Code2.Web.SseTypedTests
 		{
 			HttpContext httpContext = Substitute.For<HttpContext>();
 			httpContext.Request.Returns(Substitute.For<HttpRequest>());
-			Dictionary<string, StringValues> querySource = new Dictionary<string, StringValues>() { { "key1", "value1" }, {"key2", "value2" } };
+			Dictionary<string, StringValues> querySource = new Dictionary<string, StringValues>() { { "key1", "value1" }, { "key2", "value2" } };
 			QueryCollection queryCollection = new QueryCollection(querySource);
 			httpContext.Request.Query.Returns(queryCollection);
 			SseHttpUtility sseHttpUtility = new SseHttpUtility();

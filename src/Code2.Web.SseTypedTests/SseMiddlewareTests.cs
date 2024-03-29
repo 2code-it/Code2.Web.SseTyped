@@ -1,14 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Code2.Web.SseTyped;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
-using Code2.Web.SseTyped.Internals;
+﻿using Code2.Web.SseTyped.Internals;
 using Microsoft.AspNetCore.Http;
-using NSubstitute.Core;
+using NSubstitute;
 
 namespace Code2.Web.SseTyped.Tests
 {

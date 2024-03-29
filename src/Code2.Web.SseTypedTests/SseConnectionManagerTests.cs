@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Code2.Web.SseTyped;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSubstitute;
+﻿using NSubstitute;
 using System.Collections.Specialized;
 
 namespace Code2.Web.SseTyped.Tests
@@ -37,7 +30,7 @@ namespace Code2.Web.SseTyped.Tests
 			manager.Add(connection, typeName);
 
 			var connections1 = manager.Get(typeName, (p) => p["key1"] == "value1");
-			var connections2 = manager.Get(typeName, (p) =>  p["key2"] == "value1");
+			var connections2 = manager.Get(typeName, (p) => p["key2"] == "value1");
 			var connections3 = manager.Get(typeName, (p) => p["key3"] == "value3");
 
 			Assert.AreEqual(1, connections1.Length);

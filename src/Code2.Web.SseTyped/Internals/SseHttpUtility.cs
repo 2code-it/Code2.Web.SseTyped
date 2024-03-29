@@ -17,7 +17,7 @@ namespace Code2.Web.SseTyped.Internals
 		public ISseConnection CreateConnection(HttpContext context)
 		{
 			StringDictionary dictionary = new StringDictionary();
-			foreach(var item in context.Request.Query)
+			foreach (var item in context.Request.Query)
 			{
 				dictionary.Add(item.Key, item.Value);
 			}
