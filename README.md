@@ -1,11 +1,33 @@
 # Code2.Web.SseTyped
 AspNet server sent events tools to emit message types mapped to the request path 
 
-
 ## Options
 **RootPath**, (optional) Root path for sse request, default: "/sse"  
-**ClientIdKey**, (optional) Key name of the client-id which can be supplied by query or cookie, default: "clientid"  
 **AllowedTypeNames**, (optional) Array of allowed type names to filter
+
+## Sample app
+Sample chat app is available at https://github.com/2code-it/Web1.Sse.Chat  
+(webApi server with vue/vite client)
+
+## Client identification
+Clients can be identified with the url opening the EventSource using a querystring,
+all query items are added as a connection property which can be used to filter target
+connections when sending a message.  
+
+user 1 uses url: /sse/Message?userId=1&groupId=1  
+user 2 uses url: /sse/Message?userId=2&groupId=1  
+
+both users can be reached using
+```
+sseService.Send(message);
+//or
+sseService.Send(message, p => p["groupId"]=="1");
+```
+
+user 1 only
+```
+sseService.Send(message, p => p["userId"]=="1");
+```
 
 
 ## Example setup
@@ -20,7 +42,7 @@ builder.Services.AddSseTyped();
 
 var app = builder.Build();
 
-app.UseCors(o => o.AllowAnyHeader().AllowAnyOrigin().WithMethods("GET"));
+app.UseCors(o => o.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod());
 app.UseSseTyped();
 
 ISseService sseService = app.Services.GetRequiredService<ISseService>();
