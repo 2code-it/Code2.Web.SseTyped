@@ -70,7 +70,7 @@ namespace Code2.Web.SseTyped.Tests
 			middleWare.InvokeAsync(httpContext, connectionManager).Wait();
 
 			sseHttpUtility.Received(1).RespondBadRequestAsync(Arg.Any<HttpResponse>(), Arg.Any<string>());
-			connectionManager.Received(1).Add(Arg.Any<ISseConnection>(), Arg.Any<string>());
+			connectionManager.Received(0).Add(Arg.Any<ISseConnection>(), Arg.Any<string>());
 		}
 	}
 }
