@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +7,7 @@ namespace Code2.Web.SseTyped
 {
 	public interface ISseConnection
 	{
-		IDictionary<string, string> Properties { get; }
+		StringDictionary Properties { get; }
 		Task CompletedAsync { get; }
 		CancellationToken RequestAborted { get; }
 

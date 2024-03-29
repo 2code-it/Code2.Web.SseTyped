@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -8,11 +9,11 @@ namespace Code2.Web.SseTyped
 {
 	public class SseConnection : ISseConnection
 	{
-		public SseConnection(HttpContext httpContext) : this(httpContext, new Dictionary<string, string>())
+		public SseConnection(HttpContext httpContext) : this(httpContext, new StringDictionary())
 		{
 		}
 
-		public SseConnection(HttpContext httpContext, IDictionary<string, string> properties)
+		public SseConnection(HttpContext httpContext, StringDictionary properties)
 		{
 			_httpContext = httpContext;
 			_httpContext.RequestAborted.Register(() => _tcsCompleted.SetResult(0));
@@ -20,11 +21,11 @@ namespace Code2.Web.SseTyped
 		}
 
 		private readonly HttpContext _httpContext;
-		private TaskCompletionSource<int> _tcsCompleted = new TaskCompletionSource<int>();
+		private readonly TaskCompletionSource<int> _tcsCompleted = new TaskCompletionSource<int>();
 
 		public CancellationToken RequestAborted => _httpContext.RequestAborted;
 
-		public IDictionary<string, string> Properties { get; private set; }
+		public StringDictionary Properties { get; private set; }
 		public Task CompletedAsync => _tcsCompleted.Task;
 
 		public async Task WriteAsync(byte[] data)

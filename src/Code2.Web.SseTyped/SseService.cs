@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +22,7 @@ namespace Code2.Web.SseTyped
 		private const string _dataField = "data: ";
 		private const char _newLine = '\n';
 
-		public async Task Send<T>(T message, IDictionary<string, string>? filter = null) where T : class
+		public async Task Send<T>(T message, Func<StringDictionary, bool>? filter = null) where T : class
 		{
 			string typeName = typeof(T).Name;
 			StringBuilder sb = new StringBuilder();

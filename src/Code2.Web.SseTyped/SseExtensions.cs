@@ -24,11 +24,10 @@ namespace Code2.Web.SseTyped
 			app.UseSseTyped(options);
 		}
 
-		public static void UseSseTyped(this IApplicationBuilder app, string[]? allowedTypeNames = null, string? clientIdKey = null, string? rootPath = null)
+		public static void UseSseTyped(this IApplicationBuilder app, string[]? allowedTypeNames = null, string? rootPath = null)
 		{
 			SseMiddlewareOptions options = SseMiddleware.GetDefaultOptions();
 			if (!(allowedTypeNames is null)) options.AllowedTypeNames = allowedTypeNames;
-			if (!(clientIdKey is null)) options.ClientIdKey = clientIdKey;
 			if (!(rootPath is null)) options.RootPath = rootPath;
 			app.UseSseTyped(options);
 		}

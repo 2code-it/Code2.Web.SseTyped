@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace Code2.Web.SseTyped
 {
 	public class SseConnectionManager : ISseConnectionManager
 	{
-		public SseConnectionManager() { }
-
-
-		private IDictionary<string, List<ISseConnection>> _connectionListsByTypeName = new Dictionary<string, List<ISseConnection>>();
+		private readonly IDictionary<string, List<ISseConnection>> _connectionListsByTypeName = new Dictionary<string, List<ISseConnection>>();
 		private static readonly object _lock = new object();
 
 		public void Add(ISseConnection connection, string typeName)
@@ -22,7 +20,7 @@ namespace Code2.Web.SseTyped
 			}
 		}
 
-		public ISseConnection[] Get(string? typeName, IDictionary<string, string>? filter)
+		public ISseConnection[] Get(string? typeName, Func<StringDictionary, bool>? filter = null)
 		{
 			lock (_lock)
 			{
@@ -35,11 +33,9 @@ namespace Code2.Web.SseTyped
 
 				if (connections is null) return Array.Empty<ISseConnection>();
 
-				if (!(filter is null))
+				if (filter is not null)
 				{
-					connections = connections.Where(x =>
-						filter.Any(f => x.Properties.ContainsKey(f.Key) && x.Properties[f.Key].Equals(f.Value, StringComparison.InvariantCultureIgnoreCase))
-					);
+					connections = connections.Where(x => filter(x.Properties));
 				}
 				return connections.ToArray();
 			}

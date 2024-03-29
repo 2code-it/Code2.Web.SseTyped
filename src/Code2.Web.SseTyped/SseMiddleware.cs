@@ -20,19 +20,15 @@ namespace Code2.Web.SseTyped
 			_sseHttpUtility = sseHttpUtility;
 		}
 
-
 		private readonly RequestDelegate _next;
-		private SseMiddlewareOptions _options;
+		private readonly SseMiddlewareOptions _options;
 		private readonly ISseHttpUtility _sseHttpUtility;
 
-		private const string _sseHttpRequestMethod = "GET";
-		private const string _sseHttpAcceptHeader = "text/event-stream";
 		private const string _defaultRootPath = "/sse";
-		private const string _defaultClientIdKey = "clientid";
 
 		public async Task InvokeAsync(HttpContext context, ISseConnectionManager connectionManager)
 		{
-			if (context.Request.Headers["accept"] != _sseHttpAcceptHeader || context.Request.Method != _sseHttpRequestMethod)
+			if (!_sseHttpUtility.IsAcceptHeaderEventStream(context.Request.Headers["accept"]))
 			{
 				await _next(context);
 				return;
@@ -40,13 +36,13 @@ namespace Code2.Web.SseTyped
 
 			string? typeName = _sseHttpUtility.GetTypeNameFromRequestPath(context.Request.Path);
 			string? validationResult = _sseHttpUtility.ValidateRequest(context.Request, _options, typeName);
-			if (!(validationResult is null))
+			if (validationResult is not null)
 			{
-				await RespondBadRequest(context.Response, validationResult);
+				await _sseHttpUtility.RespondBadRequestAsync(context.Response, validationResult);
 				return;
 			}
 
-			SetSseResponse(context);
+			await _sseHttpUtility.SetSseResponseAsync(context);
 
 			var connection = _sseHttpUtility.CreateConnection(context);
 			connectionManager.Add(connection, typeName!);
@@ -57,26 +53,8 @@ namespace Code2.Web.SseTyped
 		{
 			return new SseMiddlewareOptions
 			{
-				ClientIdKey = _defaultClientIdKey,
 				RootPath = _defaultRootPath,
 			};
-		}
-
-		private async Task RespondBadRequest(HttpResponse response, string validationResult)
-		{
-			response.StatusCode = 400;
-			await response.WriteAsync(validationResult);
-			await response.Body.FlushAsync();
-		}
-
-		private async void SetSseResponse(HttpContext context)
-		{
-			//context.Features.Get<IHttpResponseBodyFeature>()?.DisableBuffering();
-			context.Response.StatusCode = 200;
-			context.Response.Headers["content-type"] = "text/event-stream";
-			context.Response.Headers["cache-control"] = "no-cache";
-			context.Response.Headers["connection"] = "keep-alive";
-			await context.Response.Body.FlushAsync();
 		}
 	}
 }
