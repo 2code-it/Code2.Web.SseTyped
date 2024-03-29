@@ -1,8 +1,10 @@
 ﻿using Code2.Web.SseTyped;
 using Code2.Web.SseTyped.Internals;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
+using System.Collections.Generic;
 
 namespace Code2.Web.SseTypedTests
 {

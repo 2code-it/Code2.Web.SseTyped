@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
 		<ImplicitUsings>false</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>true</IsPackable>
@@ -17,6 +17,14 @@
 		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
 		<OutputType>Library</OutputType>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore" Version="2.1.7" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+		<PackageReference Include="System.Text.Json" Version="8.0.3" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="..\..\README.md">

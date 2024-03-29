@@ -32,7 +32,7 @@ namespace Code2.Web.SseTyped
 			if (RequestAborted.IsCancellationRequested) return;
 			try
 			{
-				await _httpContext.Response.Body.WriteAsync(data, RequestAborted);
+				await _httpContext.Response.Body.WriteAsync(data, 0, data.Length, RequestAborted);
 				await _httpContext.Response.Body.FlushAsync(RequestAborted);
 			}
 			catch (OperationCanceledException)
