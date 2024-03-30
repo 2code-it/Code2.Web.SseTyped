@@ -16,6 +16,7 @@
 		<Description>AspNet server sent events tools to emit typed messages</Description>
 		<PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
 		<OutputType>Library</OutputType>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 	</PropertyGroup>
 
 
