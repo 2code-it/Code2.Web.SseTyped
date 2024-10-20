@@ -3,7 +3,6 @@ using Code2.Web.SseTyped.Internals;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Code2.Web.SseTypedTests
@@ -104,7 +103,7 @@ namespace Code2.Web.SseTypedTests
 			var queryCollection = Substitute.For<IQueryCollection>();
 			Dictionary<string, StringValues> querySource = new Dictionary<string, StringValues>() { { "key1", "value1" }, { "key2", "value2" } };
 			queryCollection.GetEnumerator().Returns(querySource.GetEnumerator());
-			
+
 			httpContext.Request.Query.Returns(queryCollection);
 			SseHttpUtility sseHttpUtility = new SseHttpUtility();
 
