@@ -8,42 +8,54 @@ namespace Code2.Web.SseTyped
 {
 	public class SseConnection : ISseConnection
 	{
-		public SseConnection(HttpContext httpContext) : this(httpContext, new StringDictionary())
+		public SseConnection(HttpContext httpContext) : this(httpContext, GetPropertiesFromQuery(httpContext.Request.Query))
 		{
 		}
 
 		public SseConnection(HttpContext httpContext, StringDictionary properties)
 		{
 			_httpContext = httpContext;
-			_httpContext.RequestAborted.Register(() => _tcsCompleted.SetResult(0));
+			_requestCancellationToken = _httpContext.RequestAborted;
 			Properties = properties;
 		}
 
 		private readonly HttpContext _httpContext;
-		private readonly TaskCompletionSource<int> _tcsCompleted = new TaskCompletionSource<int>();
+		private readonly CancellationToken _requestCancellationToken;
+		private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-		public CancellationToken RequestAborted => _httpContext.RequestAborted;
-
+		public CancellationToken RequestAborted => _requestCancellationToken;
 		public StringDictionary Properties { get; private set; }
-		public Task CompletedAsync => _tcsCompleted.Task;
 
 		public async Task WriteAsync(byte[] data)
 		{
-			if (RequestAborted.IsCancellationRequested) return;
+			await _semaphore.WaitAsync();
 			try
 			{
-				await _httpContext.Response.Body.WriteAsync(data, 0, data.Length, RequestAborted);
-				await _httpContext.Response.Body.FlushAsync(RequestAborted);
+				if (!RequestAborted.IsCancellationRequested) await _httpContext.Response.Body.WriteAsync(data, 0, data.Length, RequestAborted);
+				if (!RequestAborted.IsCancellationRequested) await _httpContext.Response.Body.FlushAsync(RequestAborted);
 			}
 			catch (OperationCanceledException)
 			{
-				return;
+			}
+			finally
+			{
+				_semaphore.Release();
 			}
 		}
 
 		public void Close()
 		{
 			_httpContext.Abort();
+		}
+
+		private static StringDictionary GetPropertiesFromQuery(IQueryCollection query)
+		{
+			StringDictionary dictionary = new StringDictionary();
+			foreach (var item in query)
+			{
+				dictionary.Add(item.Key, item.Value.ToString());
+			}
+			return dictionary;
 		}
 	}
 }

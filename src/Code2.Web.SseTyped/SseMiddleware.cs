@@ -46,7 +46,7 @@ namespace Code2.Web.SseTyped
 
 			var connection = _sseHttpUtility.CreateConnection(context);
 			connectionManager.Add(connection, typeName!);
-			await connection.CompletedAsync;
+			connection.RequestAborted.WaitHandle.WaitOne();
 		}
 
 		public static SseMiddlewareOptions GetDefaultOptions()
