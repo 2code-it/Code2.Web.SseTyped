@@ -27,7 +27,7 @@ namespace Code2.Web.SseTyped
 				IEnumerable<ISseConnection>? connections = true switch
 				{
 					true when string.IsNullOrEmpty(typeName) => _connectionListsByTypeName.Values.SelectMany(x => x),
-					true when _connectionListsByTypeName.ContainsKey(typeName) => _connectionListsByTypeName[typeName],
+					true when _connectionListsByTypeName.ContainsKey(typeName!) => _connectionListsByTypeName[typeName!],
 					_ => null
 				};
 

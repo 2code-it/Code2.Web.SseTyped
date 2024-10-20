@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,14 +14,7 @@ namespace Code2.Web.SseTyped.Internals
 			=> _acceptHeaderEventStream == acceptHeader;
 
 		public ISseConnection CreateConnection(HttpContext context)
-		{
-			StringDictionary dictionary = new StringDictionary();
-			foreach (var item in context.Request.Query)
-			{
-				dictionary.Add(item.Key, item.Value);
-			}
-			return new SseConnection(context, dictionary);
-		}
+			=> new SseConnection(context);
 
 		public string? GetTypeNameFromRequestPath(string requestPath)
 		{
