@@ -10,6 +10,6 @@ namespace Code2.Web.SseTyped.Internals
 		string? ValidateRequest(HttpRequest request, SseMiddlewareOptions options, string? typeName);
 		Task RespondBadRequestAsync(HttpResponse response, string validationResult);
 		Task SetSseResponseAsync(HttpContext context);
-		bool IsAcceptHeaderEventStream(string acceptHeader);
+		bool IsAcceptHeaderEventStream(string? acceptHeader);
 	}
 }

@@ -10,8 +10,8 @@ namespace Code2.Web.SseTyped.Internals
 
 		private const string _acceptHeaderEventStream = "text/event-stream";
 
-		public bool IsAcceptHeaderEventStream(string acceptHeader)
-			=> _acceptHeaderEventStream == acceptHeader;
+		public bool IsAcceptHeaderEventStream(string? acceptHeader)
+			=> acceptHeader is not null && _acceptHeaderEventStream == acceptHeader;
 
 		public ISseConnection CreateConnection(HttpContext context)
 			=> new SseConnection(context);
